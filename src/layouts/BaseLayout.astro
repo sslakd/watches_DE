@@ -1,0 +1,83 @@
+---
+const { title, description } = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title} — Uhrgeschichten</title>
+    <meta name="description" content={description} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        --font-sans: 'DM Sans', -apple-system, sans-serif;
+        --font-serif: 'DM Serif Display', Georgia, serif;
+        --color-bg: #ffffff;
+        --color-text: #1c1c1c;
+        --color-accent: #b8860b;
+        --color-muted: #6b7280;
+        --color-border: #e5e7eb;
+        --spacing-sm: 0.5rem;
+        --spacing-md: 1.5rem;
+        --spacing-lg: 3rem;
+        --spacing-xl: 6rem;
+      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body {
+        font-family: var(--font-sans);
+        font-weight: 400;
+        color: var(--color-text);
+        background: var(--color-bg);
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+      }
+      .container { max-width: 1100px; margin: 0 auto; padding: 0 var(--spacing-md); }
+      nav {
+        padding: var(--spacing-lg) 0;
+        border-bottom: 2px solid var(--color-text);
+        display: flex; justify-content: space-between; align-items: center;
+      }
+      nav .logo { font-family: var(--font-serif); font-size: 1.4rem; color: var(--color-text); text-decoration: none; }
+      nav .logo span { color: var(--color-accent); }
+      nav a { color: var(--color-muted); text-decoration: none; font-size: 0.8rem; margin-left: var(--spacing-md); text-transform: uppercase; letter-spacing: 1.5px; transition: color 0.2s; }
+      nav a:hover { color: var(--color-text); }
+      footer { text-align: center; padding: var(--spacing-xl) 0; border-top: 1px solid var(--color-border); color: var(--color-muted); font-size: 0.8rem; }
+      footer .brand { font-family: var(--font-serif); font-size: 1.1rem; color: var(--color-text); margin-bottom: var(--spacing-sm); }
+      h1, h2, h3 { font-family: var(--font-serif); font-weight: 400; }
+      h1 { font-size: 2.8rem; line-height: 1.15; margin-bottom: var(--spacing-md); }
+      h2 { font-size: 1.8rem; margin-bottom: var(--spacing-md); }
+      .hero { text-align: center; padding: var(--spacing-xl) 0 var(--spacing-lg); max-width: 650px; margin: 0 auto; }
+      .hero .subtitle { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 3px; color: var(--color-accent); margin-bottom: var(--spacing-md); }
+      .hero p { color: var(--color-muted); font-size: 1rem; max-width: 500px; margin: var(--spacing-md) auto 0; }
+      .btn { display: inline-block; border: 2px solid var(--color-text); padding: 0.7rem 2rem; text-decoration: none; color: var(--color-text); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px; font-weight: 500; transition: all 0.3s; }
+      .btn:hover { background: var(--color-text); color: white; }
+      .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: var(--spacing-lg); padding: var(--spacing-lg) 0; }
+      .card { text-decoration: none; color: inherit; }
+      .card img { width: 100%; aspect-ratio: 1; object-fit: cover; background: #f3f3f3; }
+      .card .tag { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; color: var(--color-accent); margin: 0.5rem 0 0.2rem; }
+      .card h3 { font-size: 1rem; }
+      .card .specs { font-size: 0.8rem; color: var(--color-muted); margin-top: 0.2rem; }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <nav>
+        <a href="/" class="logo">Uhr<span>geschichten</span></a>
+        <div>
+          <a href="/">Geschichten</a>
+          <a href="/uhren">Uhren</a>
+          <a href="/ueber-uns">Über uns</a>
+        </div>
+      </nav>
+      <slot />
+      <footer>
+        <div class="brand">Uhrgeschichten</div>
+        <p>Präzision. Handwerk. Geschichten.</p>
+        <p style="margin-top: 1rem;">© 2026 Uhrgeschichten. Alle Rechte vorbehalten.</p>
+      </footer>
+    </div>
+  </body>
+</html>
