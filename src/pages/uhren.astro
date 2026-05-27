@@ -10,3 +10,30 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   <div class="card-grid" id="uhren-grid"></div>
   <div style="text-align: center; padding: var(--spacing-xl) 0;"><p style="color: var(--color-muted); font-style: italic;">Täglich werden neue Geschichten hinzugefügt.</p></div>
 </BaseLayout>
+
+<script>
+  (async () => {
+    try {
+      const res = await fetch('/data/products.json');
+      const products = await res.json();
+      const grid = document.getElementById('uhren-grid');
+      if (!grid || !products.length) return;
+
+      grid.innerHTML = products.map(p => {
+        const img = p.image
+          ? `<img src="${p.image}" alt="${p.name}" loading="lazy" />`
+          : `<div style="background:#e8e3dd;width:100%;aspect-ratio:1;display:flex;align-items:center;justify-content:center;color:#888;font-size:0.85rem;">Kein Bild</div>`;
+        const price = p.price_usd > 0 ? `$${p.price_usd.toFixed(2)}` : '';
+        const brand = p.brand ? p.brand.replace(/,/g, '') : '';
+        return `<a href="${p.url}" class="card" target="_blank" rel="noopener">
+          ${img}
+          <div class="brand">${brand}</div>
+          <h3>${p.name}</h3>
+          <div class="price">${price}</div>
+        </a>`;
+      }).join('');
+    } catch(e) {
+      console.warn('Fehler beim Laden der Produkte:', e);
+    }
+  })();
+</script>
