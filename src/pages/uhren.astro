@@ -1,39 +1,160 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import products from '../data/products.json';
+
+const brands = [...new Set(products.map(p => p.brand))].sort();
+
+const groups = [
+  { label: 'Luxus — ab $3.000', watches: products.filter(p => p.price_usd >= 3000).slice(0, 4) },
+  { label: 'Mittelklasse — $300–$3.000', watches: products.filter(p => p.price_usd >= 300 && p.price_usd < 3000).slice(0, 4) },
+  { label: 'Einstieg — unter $300', watches: products.filter(p => p.price_usd < 300).slice(0, 8) },
+].filter(g => g.watches.length > 0);
+
+const grouped = groups.map(group => ({
+  ...group,
+  items: group.watches.map(p => ({
+    ...p,
+  }))
+}));
+
+const allItems = products.slice(0, 48).map(p => ({ ...p }));
 ---
 <BaseLayout title="Uhren" description="Durchstöbern Sie unsere kuratierte Auswahl an Zeitmessern.">
-  <div class="hero">
-    <div class="subtitle">Die Kollektion</div>
-    <h1>Finden Sie Ihre Geschichte</h1>
-    <p>Jede Uhr wurde ausgewählt für ihre Präzision, ihr Handwerk und die Geschichte, die sie erzählt.</p>
-  </div>
-  <div class="card-grid" id="uhren-grid"></div>
-  <div style="text-align: center; padding: var(--spacing-xl) 0;"><p style="color: var(--color-muted); font-style: italic;">Täglich werden neue Geschichten hinzugefügt.</p></div>
+  <!-- Hero -->
+  <section class="listing-hero">
+    <div class="listing-hero-inner">
+      <div class="hero-kicker">— Die Kollektion —</div>
+      <h1>{products.length} Zeitmesser<br>Jeder mit einer Geschichte</h1>
+      <p>Vom luxuriösen Erbstück bis zum klassischen Alltagsbegleiter —<br>
+      jede Uhr wurde ausgewählt für ihre Präzision, ihr Handwerk und die Geschichte, die sie erzählt.</p>
+    </div>
+  </section>
+
+  <!-- By Price Group -->
+  {grouped.map((group, gi) => (
+    <section class={`price-band ${gi % 2 === 0 ? 'band-light' : 'band-dark'}`}>
+      <div class="band-header">
+        <div class="band-number">{String(gi + 1).padStart(2, '0')}</div>
+        <div>
+          <h2>{group.label}</h2>
+          <p class="band-sub">{group.items.length} Uhren</p>
+        </div>
+      </div>
+      <div class="band-grid">
+        {group.items.map((p, i) => {
+          const img = p.image
+            ? `<img src="${p.image}" alt="${(p.name || '').replace(/"/g, '&quot;')}" loading="lazy" />`
+            : `<div class="no-img">Kein Bild</div>`;
+          const price = p.price_usd > 0 ? `$${p.price_usd.toFixed(2)}` : '';
+          return <a href={`/uhren/${p.sku || ''}`} class="band-card" style={`--i: ${i}`}>
+            <div class="band-card-img" set:html={img} />
+            <div class="band-card-info">
+              <div class="band-brand">{p.brand || ''}</div>
+              <h3>{(p.name || '').length > 50 ? (p.name || '').slice(0, 50) + '…' : (p.name || '')}</h3>
+              <div class="band-card-footer">
+                <span class="band-price">{price}</span>
+                <span class="band-link">Details →</span>
+              </div>
+            </div>
+          </a>;
+        })}
+      </div>
+    </section>
+  ))}
+
+  <!-- All Watches -->
+  <section class="all-watches">
+    <div class="all-header">
+      <div class="section-label">KURATIERT</div>
+      <h2>Alle Uhren</h2>
+      <div class="all-controls">
+        <select class="sort-select">
+          <option>Sortieren: Empfohlen</option>
+          <option>Preis: Aufsteigend</option>
+          <option>Preis: Absteigend</option>
+          <option>Marke A–Z</option>
+        </select>
+        <span class="all-count">{allItems.length} Stücke</span>
+      </div>
+    </div>
+    <div class="all-grid">
+      {allItems.map((p, i) => {
+        const img = p.image
+          ? `<img src="${p.image}" alt="${(p.name || '').replace(/"/g, '&quot;')}" loading="lazy" />`
+          : `<div class="no-img">Kein Bild</div>`;
+        const price = p.price_usd > 0 ? `$${p.price_usd.toFixed(2)}` : '';
+        return <a href={`/uhren/${p.sku || ''}`} class="all-card" style={`--delay: ${(i % 12) * 0.04}s`}>
+          <div class="all-img">
+            <div set:html={img} />
+            {p.price_usd < 50 && <span class="badge-spotlight">Schnäppchen</span>}
+          </div>
+          <div class="all-info">
+            <div class="all-brand">{p.brand || ''}</div>
+            <h4>{(p.name || '').length > 45 ? (p.name || '').slice(0, 45) + '…' : (p.name || '')}</h4>
+            <span class="all-price">{price}</span>
+          </div>
+        </a>;
+      })}
+    </div>
+    <div class="pagination">
+      <span class="page-current">1</span>
+      <a href="#" class="page-link">2</a>
+      <a href="#" class="page-link">3</a>
+      <a href="#" class="page-link">Weiter →</a>
+    </div>
+  </section>
 </BaseLayout>
 
-<script>
-  (async () => {
-    try {
-      const res = await fetch('/data/products.json');
-      const products = await res.json();
-      const grid = document.getElementById('uhren-grid');
-      if (!grid || !products.length) return;
-
-      grid.innerHTML = products.map(p => {
-        const img = p.image
-          ? `<img src="${p.image}" alt="${p.name}" loading="lazy" />`
-          : `<div style="background:#e8e3dd;width:100%;aspect-ratio:1;display:flex;align-items:center;justify-content:center;color:#888;font-size:0.85rem;">Kein Bild</div>`;
-        const price = p.price_usd > 0 ? `$${p.price_usd.toFixed(2)}` : '';
-        const brand = p.brand ? p.brand.replace(/,/g, '') : '';
-        return `<a href="${p.url}" class="card" target="_blank" rel="noopener">
-          ${img}
-          <div class="brand">${brand}</div>
-          <h3>${p.name}</h3>
-          <div class="price">${price}</div>
-        </a>`;
-      }).join('');
-    } catch(e) {
-      console.warn('Fehler beim Laden der Produkte:', e);
-    }
-  })();
-</script>
+<style>
+  .listing-hero { padding: 8rem 2rem 4rem; background: linear-gradient(to bottom, #f0ece4, var(--color-bg)); text-align: center; }
+  .listing-hero-inner { max-width: 700px; margin: 0 auto; }
+  .listing-hero .hero-kicker { font-size: 0.65rem; letter-spacing: 0.25em; color: var(--color-accent); text-transform: uppercase; margin-bottom: 1rem; font-weight: 500; }
+  .listing-hero h1 { margin-bottom: 1rem; }
+  .listing-hero p { font-size: 0.85rem; color: var(--color-muted); line-height: 2; }
+  .price-band { padding: var(--spacing-xl) 2rem; }
+  .band-light { background: white; }
+  .band-dark { background: var(--color-bg); }
+  .band-header { display: flex; align-items: center; gap: 1.5rem; max-width: 1200px; margin: 0 auto var(--spacing-lg); }
+  .band-number { font-family: var(--font-serif); font-size: 2.5rem; color: var(--color-accent); opacity: 0.25; line-height: 1; }
+  .band-header h2 { margin-bottom: 0.2rem; }
+  .band-sub { font-size: 0.75rem; color: var(--color-muted); }
+  .band-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; max-width: 1200px; margin: 0 auto; }
+  .band-card { text-decoration: none; color: inherit; display: flex; flex-direction: column; transition: all 0.3s; animation: fadeIn 0.5s ease both; animation-delay: calc(var(--i) * 0.08s); }
+  .band-card:hover { transform: translateY(-4px); }
+  .band-card-img { aspect-ratio: 1; background: var(--color-border); display: flex; align-items: center; justify-content: center; overflow: hidden; }
+  .band-card-img img { max-width: 80%; max-height: 80%; object-fit: contain; transition: transform 0.5s; }
+  .band-card:hover .band-card-img img { transform: scale(1.1); }
+  .band-card-info { padding: 0.8rem 0; }
+  .band-brand { font-size: 0.6rem; letter-spacing: 0.1em; color: var(--color-accent); text-transform: uppercase; font-weight: 600; margin-bottom: 0.2rem; }
+  .band-card-info h3 { font-size: 0.82rem; font-weight: 400; line-height: 1.5; margin-bottom: 0.5rem; font-family: var(--font-sans); }
+  .band-card-footer { display: flex; justify-content: space-between; align-items: center; }
+  .band-price { font-family: var(--font-serif); font-size: 0.95rem; font-weight: 600; color: var(--color-accent); }
+  .band-link { font-size: 0.7rem; color: var(--color-muted); transition: color 0.3s; }
+  .band-card:hover .band-link { color: var(--color-accent); }
+  .all-watches { padding: var(--spacing-xl) 2rem var(--spacing-2xl); }
+  .all-header { max-width: 1200px; margin: 0 auto var(--spacing-lg); display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 1rem; }
+  .all-header .section-label { font-size: 0.65rem; letter-spacing: 0.25em; color: var(--color-accent); text-transform: uppercase; font-weight: 500; }
+  .all-header h2 { margin-bottom: 0; }
+  .all-controls { display: flex; align-items: center; gap: 1rem; }
+  .sort-select { padding: 0.4rem 0.8rem; border: 1px solid var(--color-border); background: white; font-size: 0.78rem; font-family: var(--font-sans); color: var(--color-text); cursor: pointer; }
+  .all-count { font-size: 0.78rem; color: var(--color-muted); }
+  .all-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 1px; background: var(--color-border); max-width: 1200px; margin: 0 auto; }
+  .all-card { text-decoration: none; color: inherit; background: white; display: flex; flex-direction: column; animation: fadeIn 0.4s ease both; animation-delay: var(--delay, 0s); }
+  .all-img { position: relative; background: var(--color-border); display: flex; align-items: center; justify-content: center; overflow: hidden; }
+  .all-img img { width: 100%; object-fit: contain; transition: transform 0.4s; }
+  .all-card:hover .all-img img { transform: scale(1.08); }
+  .badge-spotlight { position: absolute; top: 6px; left: 6px; background: var(--color-text); color: white; padding: 2px 8px; font-size: 0.6rem; font-weight: 600; letter-spacing: 0.05em; }
+  .all-info { padding: 0.6rem 0.8rem 0.8rem; }
+  .all-brand { font-size: 0.55rem; letter-spacing: 0.1em; color: var(--color-accent); text-transform: uppercase; font-weight: 600; }
+  .all-info h4 { font-size: 0.75rem; font-weight: 400; line-height: 1.4; margin: 0.3rem 0; font-family: var(--font-sans); }
+  .all-price { font-family: var(--font-serif); font-size: 0.85rem; font-weight: 600; color: var(--color-accent); }
+  .pagination { display: flex; justify-content: center; align-items: center; gap: 0.3rem; padding: 2rem 0 0; }
+  .page-current { background: var(--color-text); color: white; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; font-size: 0.78rem; }
+  .page-link { color: var(--color-muted); text-decoration: none; font-size: 0.78rem; padding: 0.3rem 0.6rem; }
+  .page-link:hover { color: var(--color-text); }
+  .no-img { color: var(--color-muted); font-size: 0.75rem; }
+  :global(:root) { --spacing-2xl: 10rem; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+  @media (max-width: 1000px) { .band-grid { grid-template-columns: repeat(2, 1fr); } .all-grid { grid-template-columns: repeat(3, 1fr); } }
+  @media (max-width: 600px) { .band-grid { grid-template-columns: 1fr; } .all-grid { grid-template-columns: repeat(2, 1fr); } }
+</style>
