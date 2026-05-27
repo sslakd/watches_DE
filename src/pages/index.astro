@@ -1,16 +1,213 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import products from '../data/products.json';
+
+const storyWatch = products.find(p => p.sku === 'H64635140') || products[0];
+const featured = products.slice(0, 6);
+const spotlight = products.slice(12, 15);
 ---
 
 <BaseLayout title="Uhrgeschichten" description="Entdecken Sie Zeitmesser mit Geschichte. Kuratierte Uhren für Menschen, die Wert auf Handwerk und Qualität legen.">
-  <div class="hero">
-    <div class="subtitle">Kuratierte Zeitmesser</div>
-    <h1>Jede Uhr hat eine Geschichte</h1>
-    <p>Für uns ist eine Uhr mehr als ein Instrument. Sie ist ein Begleiter durch die Momente, die zählen. Entdecken Sie unsere kuratierte Kollektion von Zeitmessern – jedes mit einer Geschichte, die es wert ist, erzählt zu werden.</p>
-    <a href="/uhren" class="btn" style="margin-top: 2rem;">Uhren entdecken</a>
-  </div>
-  <div style="text-align: center; padding: var(--spacing-lg) 0;">
-    <h2>Ausgewählte Geschichten</h2>
-    <p style="color: var(--color-muted);">Bald verfügbar — unsere kuratierte Kollektion.</p>
-  </div>
+  <!-- Hero -->
+  <section class="hero-full">
+    <div class="hero-content">
+      <div class="hero-kicker">— Willkommen bei Uhrgeschichten —</div>
+      <h1>Jede Uhr hat<br>eine Geschichte</h1>
+      <p class="hero-text">Eine Uhr ist mehr als ein Instrument. Sie ist ein Begleiter durch die Momente, die zählen — ein stiller Zeuge Ihrer Geschichte.</p>
+      <a href="/uhren" class="btn-hero">Uhren entdecken</a>
+    </div>
+    <div class="hero-visual">
+      <div class="hero-ornament"></div>
+    </div>
+  </section>
+
+  <!-- Philosophy -->
+  <section class="philosophy">
+    <div class="philosophy-inner">
+      <div class="philosophy-label">Unsere Überzeugung</div>
+      <h2>Warum Geschichten?</h2>
+      <div class="philosophy-grid">
+        <div class="belief-card">
+          <div class="belief-number">01</div>
+          <h3>Erbe</h3>
+          <p>Jede Uhr trägt das Erbe ihrer Schöpfer — jahrzehntelange Handwerkskunst, Innovation und Leidenschaft, verdichtet zu einem mechanischen Meisterwerk am Handgelenk.</p>
+        </div>
+        <div class="belief-card">
+          <div class="belief-number">02</div>
+          <h3>Momente</h3>
+          <p>Beförderung, Hochzeit, Reise über Kontinente. Uhren markieren die Meilensteine unseres Lebens und werden zu greifbaren Erinnerungen, die wir bei uns tragen.</p>
+        </div>
+        <div class="belief-card">
+          <div class="belief-number">03</div>
+          <h3>Verbindung</h3>
+          <p>Eine Uhr verbindet Sie mit etwas Größerem — der Präzision eines Schweizer Werks, der Seele traditionellen Handwerks, der Robustheit eines Werkzeugs fürs Leben.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Story Feature -->
+  {storyWatch && (
+  <section class="story-feature">
+    <div class="story-inner">
+      <div class="story-image">
+        <img src={storyWatch.image} alt={storyWatch.name} />
+      </div>
+      <div class="story-text">
+        <div class="story-kicker">Geschichte des Tages</div>
+        <h2>{storyWatch.brand} — Fliegeruhren</h2>
+        <p class="story-desc">Die Hamilton Khaki Aviation Pilot trägt das Erbe von über einem Jahrhundert Luftfahrtgeschichte. Vom Cockpit amerikanischer Kampfflugzeuge im Zweiten Weltkrieg bis ans Handgelenk moderner Abenteurer — eine Legende der Lüfte.</p>
+        <div class="story-meta">
+          <span class="story-price">${storyWatch.price_usd?.toFixed(2)}</span>
+          <a href="/geschichten/hamilton-khaki-aviation" class="btn-story">Geschichte lesen →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+  )}
+
+  <!-- Collection -->
+  <section class="collection">
+    <div class="collection-header">
+      <div class="section-label">Kollektion</div>
+      <h2>Kuratierte Zeitmesser<br>Mit Geschichten zum Erzählen</h2>
+    </div>
+    <div class="collection-grid">
+      {featured.map((product, i) => (
+        <a href={product.url || '#'} class="story-card" target="_blank" style={`--delay: ${i * 0.05}s`}>
+          <div class="story-card-image">
+            <img src={product.image} alt={product.name} loading="lazy" />
+            <div class="story-card-overlay"></div>
+          </div>
+          <div class="story-card-info">
+            <div class="story-card-brand">{product.brand}</div>
+            <h3>{(product.name || '').length > 45 ? (product.name || '').slice(0, 45) + '…' : (product.name || '')}</h3>
+            <div class="story-card-footer">
+              <span class="story-card-price">{product.price_usd > 0 ? `$${product.price_usd.toFixed(2)}` : ''}</span>
+              <span class="story-card-link">Entdecken →</span>
+            </div>
+          </div>
+        </a>
+      ))}
+    </div>
+    <div class="collection-cta">
+      <a href="/uhren" class="btn-outline">Alle Uhren ansehen — {products.length} Geschichten</a>
+    </div>
+  </section>
+
+  <!-- Brand Stories -->
+  <section class="brands-section">
+    <div class="section-label">Marken</div>
+    <h2>Bekannte Marken<br>Unsere kuratierte Auswahl</h2>
+    <div class="brands-showcase">
+      {['Seiko','Hamilton','Casio','Tissot','Orient','Citizen','Bulova','Longines'].filter(b => products.some(p => p.brand === b)).slice(0, 4).map(brand => {
+        const brandWatches = products.filter(p => p.brand === brand).slice(0, 3);
+        return (
+          <div class="brand-group">
+            <h3>{brand}</h3>
+            <div class="brand-mini-grid">
+              {brandWatches.map(w => (
+                <a href={w.url || '#'} class="brand-mini-card" target="_blank">
+                  <img src={w.image} alt={w.name} loading="lazy" />
+                  <span>{w.price_usd > 0 ? `$${w.price_usd.toFixed(0)}` : ''}</span>
+                </a>
+              ))}
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-final">
+    <div class="cta-inner">
+      <div class="cta-kicker">Finden Sie Ihre</div>
+      <h2>Ihre Geschichte wartet</h2>
+      <p>Jeder Zeitmesser hat eine Geschichte. Die Frage ist — welche wird Ihre?</p>
+      <a href="/uhren" class="btn-hero">Kollektion durchstöbern</a>
+    </div>
+  </section>
 </BaseLayout>
+
+<style>
+  :global(:root) { --spacing-2xl: 10rem; }
+  .hero-full { display: grid; grid-template-columns: 1fr 1fr; min-height: 80vh; background: linear-gradient(135deg, #f0ece4, var(--color-bg)); }
+  .hero-content { padding: 8rem 3rem 4rem; max-width: 550px; justify-self: end; display: flex; flex-direction: column; justify-content: center; }
+  .hero-kicker { font-size: 0.65rem; letter-spacing: 0.25em; color: var(--color-accent); text-transform: uppercase; margin-bottom: 1rem; font-weight: 500; }
+  .hero-content h1 { font-size: 3.5rem; line-height: 1.1; margin-bottom: 1.5rem; }
+  .hero-text { font-size: 1rem; color: var(--color-muted); line-height: 1.8; margin-bottom: 2.5rem; }
+  .btn-hero { display: inline-block; background: var(--color-text); color: white; padding: 0.9rem 2.5rem; text-decoration: none; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.1em; transition: background 0.3s; align-self: flex-start; }
+  .btn-hero:hover { background: var(--color-accent); }
+  .hero-visual { display: flex; align-items: center; justify-content: center; }
+  .hero-ornament { width: 300px; height: 300px; border: 2px solid var(--color-accent); border-radius: 50%; opacity: 0.15; }
+  .philosophy { padding: var(--spacing-2xl) 2rem; background: white; }
+  .philosophy-inner { max-width: 1000px; margin: 0 auto; }
+  .philosophy-label { font-size: 0.6rem; letter-spacing: 0.3em; color: var(--color-accent); text-transform: uppercase; font-weight: 500; margin-bottom: 0.5rem; }
+  .philosophy h2 { margin-bottom: var(--spacing-lg); }
+  .philosophy-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3rem; }
+  .belief-number { font-family: var(--font-serif); font-size: 2.5rem; color: var(--color-accent); opacity: 0.2; margin-bottom: 0.5rem; }
+  .belief-card h3 { font-size: 1.1rem; margin-bottom: 0.8rem; }
+  .belief-card p { font-size: 0.85rem; color: var(--color-muted); line-height: 1.8; }
+  .story-feature { background: var(--color-text); color: white; padding: 0; }
+  .story-inner { display: grid; grid-template-columns: 1fr 1fr; max-width: 1200px; margin: 0 auto; }
+  .story-image { display: flex; align-items: center; justify-content: center; background: #2a2a2a; padding: 4rem; }
+  .story-image img { max-width: 250px; height: auto; }
+  .story-text { padding: 4rem 3rem; display: flex; flex-direction: column; justify-content: center; }
+  .story-kicker { font-size: 0.6rem; letter-spacing: 0.25em; color: var(--color-accent); text-transform: uppercase; font-weight: 500; margin-bottom: 1rem; }
+  .story-text h2 { font-family: var(--font-serif); font-size: 2rem; color: white; margin-bottom: 1.5rem; }
+  .story-desc { font-size: 0.9rem; color: rgba(255,255,255,0.7); line-height: 1.8; }
+  .story-meta { display: flex; align-items: center; gap: 2rem; margin-top: 2rem; }
+  .story-price { font-family: var(--font-serif); font-size: 1.3rem; color: var(--color-accent); }
+  .btn-story { display: inline-block; color: white; text-decoration: none; font-size: 0.78rem; letter-spacing: 0.08em; border-bottom: 1px solid rgba(255,255,255,0.3); padding-bottom: 2px; transition: border-color 0.3s; }
+  .btn-story:hover { border-color: var(--color-accent); }
+  .collection { padding: var(--spacing-2xl) 2rem; }
+  .collection-header { max-width: 1200px; margin: 0 auto var(--spacing-lg); }
+  .section-label { font-size: 0.6rem; letter-spacing: 0.3em; color: var(--color-accent); text-transform: uppercase; font-weight: 500; margin-bottom: 0.5rem; }
+  .collection-header h2 { margin-bottom: 0; }
+  .collection-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--color-border); max-width: 1200px; margin: 0 auto; }
+  .story-card { position: relative; text-decoration: none; color: inherit; background: white; overflow: hidden; display: flex; flex-direction: column; animation: fadeIn 0.6s ease both; animation-delay: var(--delay, 0s); }
+  .story-card-image { position: relative; aspect-ratio: 1; overflow: hidden; background: var(--color-border); }
+  .story-card-image img { width: 100%; height: 100%; object-fit: contain; padding: 1rem; transition: transform 0.6s; }
+  .story-card:hover .story-card-image img { transform: scale(1.08); }
+  .story-card-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, transparent 60%, rgba(0,0,0,0.03)); opacity: 0; transition: opacity 0.4s; }
+  .story-card:hover .story-card-overlay { opacity: 1; }
+  .story-card-info { padding: 1rem 1.2rem 1.2rem; flex: 1; display: flex; flex-direction: column; }
+  .story-card-brand { font-size: 0.6rem; letter-spacing: 0.1em; color: var(--color-accent); text-transform: uppercase; font-weight: 600; margin-bottom: 0.3rem; }
+  .story-card-info h3 { font-size: 0.82rem; font-weight: 400; line-height: 1.5; margin-bottom: 0.5rem; flex: 1; }
+  .story-card-footer { display: flex; justify-content: space-between; align-items: center; }
+  .story-card-price { font-family: var(--font-serif); font-size: 0.95rem; font-weight: 600; color: var(--color-accent); }
+  .story-card-link { font-size: 0.7rem; color: var(--color-muted); transition: color 0.3s; }
+  .story-card:hover .story-card-link { color: var(--color-accent); }
+  .collection-cta { text-align: center; padding: var(--spacing-xl) 0 0; }
+  .btn-outline { display: inline-block; border: 1px solid var(--color-text); padding: 0.8rem 2.5rem; text-decoration: none; color: var(--color-text); font-size: 0.78rem; letter-spacing: 0.08em; transition: all 0.3s; }
+  .btn-outline:hover { background: var(--color-text); color: white; }
+  .brands-section { background: white; padding: var(--spacing-2xl) 2rem; }
+  .brands-section > .section-label, .brands-section > h2 { max-width: 1200px; margin-left: auto; margin-right: auto; }
+  .brands-showcase { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem; max-width: 1200px; margin: 0 auto; }
+  .brand-group h3 { font-family: var(--font-serif); font-size: 0.9rem; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--color-border); color: var(--color-accent); }
+  .brand-mini-grid { display: flex; flex-direction: column; gap: 0.5rem; }
+  .brand-mini-card { display: flex; align-items: center; gap: 0.8rem; text-decoration: none; color: inherit; padding: 0.4rem; transition: background 0.2s; border-radius: 4px; }
+  .brand-mini-card:hover { background: rgba(0,0,0,0.03); }
+  .brand-mini-card img { width: 50px; height: 50px; object-fit: contain; background: var(--color-border); border-radius: 4px; }
+  .brand-mini-card span { font-family: var(--font-serif); font-size: 0.78rem; color: var(--color-accent); }
+  .cta-final { background: linear-gradient(135deg, #1a1a1a, #2c2c2c); color: white; text-align: center; padding: var(--spacing-2xl) 2rem; }
+  .cta-inner { max-width: 600px; margin: 0 auto; }
+  .cta-kicker { font-size: 0.6rem; letter-spacing: 0.3em; color: var(--color-accent); text-transform: uppercase; margin-bottom: 1rem; }
+  .cta-final h2 { color: white; margin-bottom: 1rem; }
+  .cta-final p { color: rgba(255,255,255,0.6); font-size: 0.9rem; margin-bottom: 2.5rem; }
+  .cta-final .btn-hero { background: var(--color-accent); }
+  .cta-final .btn-hero:hover { background: #a37a0a; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+  @media (max-width: 900px) {
+    .hero-full { grid-template-columns: 1fr; min-height: auto; }
+    .hero-content { padding: 6rem 2rem 3rem; max-width: 100%; }
+    .hero-visual { display: none; }
+    .philosophy-grid { grid-template-columns: 1fr; gap: 2rem; }
+    .story-inner { grid-template-columns: 1fr; }
+    .story-image { padding: 2rem; }
+    .story-text { padding: 2rem; }
+    .collection-grid { grid-template-columns: repeat(2, 1fr); }
+    .brands-showcase { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
