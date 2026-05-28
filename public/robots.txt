@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://uhrgeschichten.com/sitemap-index.xml
