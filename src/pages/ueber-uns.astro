@@ -1,14 +1,34 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 ---
-<BaseLayout title="Über uns" description="Die Geschichte hinter Uhrgeschichten.">
-  <div class="hero">
-    <div class="subtitle">Unsere Geschichte</div>
-    <h1>Warum Uhrgeschichten?</h1>
-    <p>Eine Uhr ist nie nur eine Uhr. Sie ist das erste Geschenk, das Sie sich selbst gemacht haben. Das Erbstück Ihres Großvaters. Der Meilenstein eines Erfolgs. Wir glauben, dass jede Uhr eine Geschichte hat.</p>
-  </div>
-  <div style="max-width: 650px; margin: 0 auto; padding: var(--spacing-lg) 0; color: #555; line-height: 2;">
-    <p>Unsere kuratierte Kollektion vereint Zeitmesser der angesehensten Marken der Welt – Seiko, Citizen, Casio, Orient und mehr. Nicht weil sie die teuersten sind, sondern weil sie am meisten zu erzählen haben.</p>
-    <p style="margin-top: 1rem; font-style: italic; color: var(--color-accent);">— Das Uhrgeschichten-Team</p>
-  </div>
+
+<BaseLayout title="Ueber uns" description="Uhrgeschichten ist ein redaktionelles Affiliate-Projekt fuer Uhren-Traffic.">
+  <section class="page-hero">
+    <div class="container">
+      <p class="eyebrow">Ueber den Funnel</p>
+      <h1>Uhrgeschichten ist kein Shop.</h1>
+      <p>Wir schreiben redaktionelle Uhrenstories, beantworten Kauf-Fragen und fuehren interessierte Leser danach zu CreationWatches.</p>
+    </div>
+  </section>
+
+  <section class="about-body">
+    <div class="container about-grid">
+      <div>
+        <p class="eyebrow">Warum</p>
+        <h2>Guter Affiliate-Traffic beginnt vor dem Produktklick.</h2>
+      </div>
+      <div class="about-copy">
+        <p>Leser suchen nicht zuerst einen Warenkorb. Sie suchen Orientierung: Welche Marke passt? Welche Uhr ist alltagstauglich? Warum ist ein Modell interessant?</p>
+        <p>Uhrgeschichten beantwortet diese Fragen mit Stories, Kaufkontext und klaren Preislinks zu CreationWatches.</p>
+        <p>Affiliate-Hinweis: Wenn Leser ueber unsere CreationWatches-Links kaufen, koennen wir eine Provision erhalten. Fuer Leser entstehen dadurch keine Mehrkosten.</p>
+      </div>
+    </div>
+  </section>
 </BaseLayout>
+
+<style>
+  .about-body { padding: var(--spacing-xl) 0 var(--spacing-2xl); }
+  .about-grid { display: grid; grid-template-columns: 0.85fr 1.15fr; gap: 4rem; align-items: start; }
+  .about-copy { display: grid; gap: 1.25rem; color: var(--color-subtle); font-size: 1rem; line-height: 1.9; }
+  @media (max-width: 760px) { .about-grid { grid-template-columns: 1fr; gap: 2rem; } }
+</style>
