@@ -13,16 +13,16 @@ const priceGroups = [
 <BaseLayout title="Kaufberatung fuer Uhren" description="Redaktionelle Uhren-Guides mit CreationWatches-Preislinks.">
   <section class="page-hero">
     <div class="container">
-      <p class="eyebrow">Buying Guide Hub</p>
+      <p class="eyebrow">Kaufberatung</p>
       <h1>{products.length} Uhren nach Kaufintention sortiert.</h1>
-      <p>Stories und Preisbaender helfen Lesern beim Entscheiden. Der Klick fuehrt danach zum aktuellen CreationWatches-Angebot.</p>
+      <p>Preisbereiche und technische Eckdaten helfen bei der Orientierung. Alle Preise werden in US-Dollar angezeigt.</p>
     </div>
   </section>
 
   <section class="price-groups">
     <div class="container">
       <div class="section-heading">
-        <div><p class="eyebrow">Budget Intent</p><h2>Start nach Preisbereich</h2></div>
+        <div><p class="eyebrow">Budget</p><h2>Nach Preisbereich beginnen</h2></div>
       </div>
       <div class="group-grid">
         {priceGroups.map((group) => (
@@ -30,13 +30,13 @@ const priceGroups = [
             <div class="group-header"><span>{group.intent}</span><h3>{group.label}</h3></div>
             <div class="mini-list">
               {group.watches.map((watch) => (
-                <a href={watch.url || '#'} class="mini-card" target="_blank" rel="noopener noreferrer">
+                <a href={watch.url || '#'} class="mini-card" target="_blank" rel="sponsored nofollow noopener noreferrer">
                   <img src={watch.image} alt={watch.name} loading="lazy" />
                   <div>
                     <span>{watch.brand}</span>
                     <strong>{watch.name}</strong>
                     <em>{watch.price_usd > 0 ? `$${watch.price_usd.toFixed(2)}` : 'Details ansehen'}</em>
-                    <small>CreationWatches Preislink</small>
+                    <small>Preis und Verfügbarkeit</small>
                   </div>
                 </a>
               ))}
@@ -50,21 +50,21 @@ const priceGroups = [
   <section class="all-watches">
     <div class="container">
       <div class="section-heading">
-        <div><p class="eyebrow">Affiliate Feed</p><h2>Alle Uhren-Guides</h2></div>
+        <div><p class="eyebrow">Die Auswahl</p><h2>Alle Uhren im Überblick</h2></div>
         <span class="count">{visibleProducts.length} angezeigt</span>
       </div>
       <div class="watch-grid">
         {visibleProducts.map((watch) => (
-          <a href={watch.url || '#'} class="watch-card" target="_blank" rel="noopener noreferrer">
+          <a href={watch.url || '#'} class="watch-card" target="_blank" rel="sponsored nofollow noopener noreferrer">
             <div class="watch-image">
-              {watch.price_usd > 0 && watch.price_usd < 100 && <span class="badge">Value</span>}
+              {watch.price_usd > 0 && watch.price_usd < 100 && <span class="badge">Preiswert</span>}
               <img src={watch.image} alt={watch.name} loading="lazy" />
             </div>
             <div class="watch-info">
               <span>{watch.brand}</span>
               <h3>{watch.name}</h3>
               <strong>{watch.price_usd > 0 ? `$${watch.price_usd.toFixed(2)}` : 'Details ansehen'}</strong>
-              <small>Preis bei CreationWatches pruefen</small>
+              <small>Preis bei CreationWatches prüfen</small>
             </div>
           </a>
         ))}

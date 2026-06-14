@@ -2,33 +2,66 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
-<BaseLayout title="Ueber uns" description="Uhrgeschichten ist ein redaktionelles Affiliate-Projekt fuer Uhren-Traffic.">
-  <section class="page-hero">
+<BaseLayout title="Über uns" description="Uhrgeschichten erzählt von Gestaltung, Herkunft und Charakter besonderer Zeitmesser.">
+  <section class="about-hero">
     <div class="container">
-      <p class="eyebrow">Ueber den Funnel</p>
-      <h1>Uhrgeschichten ist kein Shop.</h1>
-      <p>Wir schreiben redaktionelle Uhrenstories, beantworten Kauf-Fragen und fuehren interessierte Leser danach zu CreationWatches.</p>
+      <p class="eyebrow">Über Uhrgeschichten</p>
+      <h1>Eine Uhr wird bedeutend, lange bevor sie uns gehört.</h1>
+      <p>Wir erzählen, woher besondere Zeitmesser kommen, wie sie gestaltet wurden und warum sie über Jahre interessant bleiben.</p>
     </div>
   </section>
 
-  <section class="about-body">
-    <div class="container about-grid">
+  <section class="manifesto">
+    <div class="container manifesto-grid">
       <div>
-        <p class="eyebrow">Warum</p>
-        <h2>Guter Affiliate-Traffic beginnt vor dem Produktklick.</h2>
+        <p class="eyebrow">Unser Ansatz</p>
+        <h2>Erst verstehen.<br />Dann entscheiden.</h2>
       </div>
-      <div class="about-copy">
-        <p>Leser suchen nicht zuerst einen Warenkorb. Sie suchen Orientierung: Welche Marke passt? Welche Uhr ist alltagstauglich? Warum ist ein Modell interessant?</p>
-        <p>Uhrgeschichten beantwortet diese Fragen mit Stories, Kaufkontext und klaren Preislinks zu CreationWatches.</p>
-        <p>Affiliate-Hinweis: Wenn Leser ueber unsere CreationWatches-Links kaufen, koennen wir eine Provision erhalten. Fuer Leser entstehen dadurch keine Mehrkosten.</p>
+      <div class="manifesto-copy">
+        <p>Eine gute Kaufentscheidung beginnt nicht beim Preis. Sie beginnt mit der Frage, ob eine Uhr zum eigenen Alltag, Stil und Anspruch passt.</p>
+        <p>Deshalb steht bei uns die Geschichte an erster Stelle. Herkunft, Gestaltung, Werk und Tragegefühl geben den Kontext, den ein Produktbild allein nicht liefern kann.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="principles">
+    <div class="container principle-grid">
+      <article><span>01</span><h3>Die Uhr entdecken</h3><p>Klare Bilder und eine ruhige Gestaltung lassen Form, Zifferblatt und Details wirken.</p></article>
+      <article><span>02</span><h3>Ihre Geschichte lesen</h3><p>Wir ordnen Design, Technik und Herkunft ein, ohne aus jeder Uhr ein Statussymbol zu machen.</p></article>
+      <article><span>03</span><h3>Bewusst entscheiden</h3><p>Erst danach führt ein transparenter Link zu Preis und Verfügbarkeit bei CreationWatches.</p></article>
+    </div>
+  </section>
+
+  <section class="disclosure">
+    <div class="container disclosure-grid">
+      <p class="eyebrow">Transparenz</p>
+      <div>
+        <h2>Unabhängig lesen.<br />Transparent weiterklicken.</h2>
+        <p>Einige Links zu CreationWatches sind Affiliate-Links. Wenn Sie darüber kaufen, können wir eine Provision erhalten. Für Sie entstehen keine Mehrkosten.</p>
       </div>
     </div>
   </section>
 </BaseLayout>
 
 <style>
-  .about-body { padding: var(--spacing-xl) 0 var(--spacing-2xl); }
-  .about-grid { display: grid; grid-template-columns: 0.85fr 1.15fr; gap: 4rem; align-items: start; }
-  .about-copy { display: grid; gap: 1.25rem; color: var(--color-subtle); font-size: 1rem; line-height: 1.9; }
-  @media (max-width: 760px) { .about-grid { grid-template-columns: 1fr; gap: 2rem; } }
+  .about-hero { padding: 8rem 0 5rem; border-bottom: 1px solid var(--color-border); }
+  .about-hero h1 { max-width: 980px; margin-top: 1rem; font-family: var(--font-sans); font-weight: 700; }
+  .about-hero p:last-child { max-width: 650px; margin-top: 1.75rem; color: var(--color-muted); font-size: 1.05rem; }
+  .manifesto { padding: 6rem 0; border-bottom: 1px solid var(--color-border); }
+  .manifesto-grid, .disclosure-grid { display: grid; grid-template-columns: 0.8fr 1.2fr; gap: 5rem; }
+  .manifesto h2, .disclosure h2 { margin-top: 0.75rem; font-family: var(--font-sans); font-weight: 700; }
+  .manifesto-copy { display: grid; gap: 1.5rem; color: var(--color-subtle); font-size: 1.08rem; line-height: 1.9; }
+  .principles { border-bottom: 1px solid var(--color-border); }
+  .principle-grid { display: grid; grid-template-columns: repeat(3, 1fr); border-left: 1px solid var(--color-border); }
+  .principle-grid article { min-height: 300px; padding: 2rem; border-right: 1px solid var(--color-border); }
+  .principle-grid span { color: #777; font-size: 0.75rem; font-weight: 700; }
+  .principle-grid h3 { margin: 3rem 0 1rem; font-family: var(--font-sans); font-size: 1.35rem; font-weight: 700; }
+  .principle-grid p { color: var(--color-muted); }
+  .disclosure { padding: 6rem 0 8rem; }
+  .disclosure p:last-child { max-width: 620px; margin-top: 1.5rem; color: var(--color-muted); }
+  @media (max-width: 760px) {
+    .about-hero { padding: 5rem 0 3.5rem; }
+    .manifesto-grid, .disclosure-grid, .principle-grid { grid-template-columns: 1fr; gap: 2rem; }
+    .principle-grid article { min-height: auto; border-bottom: 1px solid var(--color-border); }
+  }
 </style>

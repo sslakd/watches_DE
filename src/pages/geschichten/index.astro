@@ -1,0 +1,84 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const modules = import.meta.glob('./*.astro', {
+  query: '?raw',
+  import: 'default',
+  eager: true,
+});
+
+const stories = Object.entries(modules).map(([path, source]) => {
+  const content = String(source);
+  const slug = path.split('/').pop()?.replace('.astro', '') || '';
+  const layoutTitle = content.match(/<BaseLayout\s+title="([^"]+)"/)?.[1];
+  const heading = content.match(/<h1[^>]*>([\s\S]*?)<\/h1>/)?.[1]
+    ?.replace(/<br\s*\/?>/gi, ' ')
+    .replace(/<[^>]+>/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+  const image = content.match(/<img[^>]+src="([^"]+)"/)?.[1] || '';
+  const category = content.match(/class="story-category"[^>]*>([\s\S]*?)<\/div>/)?.[1]
+    ?.replace(/[—-]/g, '')
+    .trim() || 'Uhrengeschichte';
+
+  return {
+    href: `/geschichten/${slug}.html`,
+    title: heading || layoutTitle || slug,
+    image,
+    category,
+  };
+}).filter((story) => story.image).sort((a, b) => a.title.localeCompare(b.title, 'de'));
+---
+
+<BaseLayout title="Alle Uhrengeschichten" description="Uhren entdecken, ihre Herkunft verstehen und danach Preis und Verfuegbarkeit pruefen.">
+  <section class="stories-hero">
+    <div class="container">
+      <p class="eyebrow">Das Archiv</p>
+      <h1>Uhren, die mehr als nur Zeit zeigen.</h1>
+      <p>Entdecken Sie ein Modell, lesen Sie seine Geschichte und entscheiden Sie erst danach, ob es zu Ihnen passt.</p>
+    </div>
+  </section>
+
+  <section class="story-index">
+    <div class="container">
+      <div class="index-heading">
+        <p>{stories.length} Geschichten</p>
+        <span>Nach Titel sortiert</span>
+      </div>
+      <div class="story-grid">
+        {stories.map((story, index) => (
+          <a href={story.href} class="story-card">
+            <div class="story-image">
+              <span>{String(index + 1).padStart(2, '0')}</span>
+              <img src={story.image} alt={story.title} loading="lazy" />
+            </div>
+            <div class="story-copy">
+              <small>{story.category}</small>
+              <h2>{story.title}</h2>
+              <strong>Geschichte lesen</strong>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .stories-hero { padding: 7rem 0 4rem; border-bottom: 1px solid var(--color-border); }
+  .stories-hero h1 { max-width: 850px; margin-top: 1rem; font-family: var(--font-sans); font-weight: 700; }
+  .stories-hero p:last-child { max-width: 620px; margin-top: 1.5rem; color: var(--color-muted); }
+  .story-index { padding: 2rem 0 7rem; }
+  .index-heading { display: flex; justify-content: space-between; padding-bottom: 1rem; color: var(--color-muted); font-size: 0.75rem; font-weight: 700; text-transform: uppercase; }
+  .story-grid { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--color-border); border-left: 1px solid var(--color-border); }
+  .story-card { display: flex; min-width: 0; flex-direction: column; color: inherit; text-decoration: none; border-right: 1px solid var(--color-border); border-bottom: 1px solid var(--color-border); }
+  .story-image { position: relative; display: grid; min-height: 330px; padding: 2rem; place-items: center; border-bottom: 1px solid var(--color-border); }
+  .story-image span { position: absolute; top: 1rem; left: 1rem; color: #777; font-size: 0.72rem; font-weight: 700; }
+  .story-image img { width: 100%; height: 280px; object-fit: contain; mix-blend-mode: multiply; }
+  .story-copy { display: flex; min-height: 220px; flex-direction: column; padding: 1.35rem; }
+  .story-copy small { color: #777; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; }
+  .story-copy h2 { margin: 0.8rem 0 1.5rem; font-family: var(--font-sans); font-size: 1.25rem; font-weight: 700; line-height: 1.25; }
+  .story-copy strong { margin-top: auto; font-size: 0.78rem; text-transform: uppercase; }
+  @media (max-width: 900px) { .story-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 600px) { .stories-hero { padding: 4rem 0 3rem; } .story-grid { grid-template-columns: 1fr; } }
+</style>
