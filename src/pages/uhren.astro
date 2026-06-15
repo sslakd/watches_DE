@@ -1,10 +1,9 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import products from '../data/products.json';
+import { creationWatchesSearchUrl } from '../utils/creationWatches.js';
 
 const visibleProducts = products.slice(0, 48);
-const creationWatchesUrl = (sku) =>
-  `https://www.creationwatches.com/products/de/search?keyword=${encodeURIComponent(sku)}`;
 const priceGroups = [
   { label: 'Unter $100', intent: 'Einstieg & Alltag', watches: products.filter((p) => p.price_usd > 0 && p.price_usd < 100).slice(0, 4) },
   { label: '$100 bis $300', intent: 'Starker Gegenwert', watches: products.filter((p) => p.price_usd >= 100 && p.price_usd < 300).slice(0, 4) },
@@ -32,7 +31,7 @@ const priceGroups = [
             <div class="group-header"><span>{group.intent}</span><h3>{group.label}</h3></div>
             <div class="mini-list">
               {group.watches.map((watch) => (
-                <a href={creationWatchesUrl(watch.sku)} class="mini-card" target="_blank" rel="sponsored nofollow noopener noreferrer">
+                <a href={creationWatchesSearchUrl(watch.sku)} class="mini-card" target="_blank" rel="sponsored nofollow noopener noreferrer">
                   <img src={watch.image} alt={watch.name} loading="lazy" />
                   <div>
                     <span>{watch.brand}</span>
@@ -57,7 +56,7 @@ const priceGroups = [
       </div>
       <div class="watch-grid">
         {visibleProducts.map((watch) => (
-          <a href={creationWatchesUrl(watch.sku)} class="watch-card" target="_blank" rel="sponsored nofollow noopener noreferrer">
+          <a href={creationWatchesSearchUrl(watch.sku)} class="watch-card" target="_blank" rel="sponsored nofollow noopener noreferrer">
             <div class="watch-image">
               {watch.price_usd > 0 && watch.price_usd < 100 && <span class="badge">Preiswert</span>}
               <img src={watch.image} alt={watch.name} loading="lazy" />
